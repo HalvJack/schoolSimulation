@@ -10,6 +10,7 @@ public class Class implements Comparator<String>{
     private int percentageOfCapacity;
 
     public Class() {
+        actualNumberOfStudents = 0;
     }
 
     public Class(String groupName, int actualNumberOfStudents) {
@@ -81,7 +82,7 @@ public void addStudent(Student student){
         percentageOfCapacity = actualNumberOfStudents/maxNumberOfStudent*100;
     }
 
-    public void addPoints(Student student, double points){
+    public void addPoints(Student student, int points){
         student.setAmountOfPoints(student.getAmountOfPoints()+points);
         }
 public void getStudent(Student student){
@@ -92,18 +93,19 @@ public void getStudent(Student student){
 public void changeCondition(Student student, StudentCondition studentCondition){
         student.setStudentCondition(studentCondition);
         }
-public void removePoints(Student student, double points){
+public void removePoints(Student student, int points){
         student.setAmountOfPoints(student.getAmountOfPoints()-points);
         }
-public void search(String surname){
+public Student search(String surname){
         int comparedSurname;
         for(int i = 0; i < myList.size(); i++){
             comparedSurname = compare(surname, myList.get(i).getSurname());
             if(comparedSurname == 1){
                 System.out.println(myList.get(i));
-                break;
+                return myList.get(i);
             }
         }
+        return null;
         }
 @Override
 public int compare(String o1, String o2){
@@ -120,12 +122,14 @@ public int compare(double o1, double o2){
     }
     return 0;
 }*/
-public void searchPartial(String nameSurname){
+public Student searchPartial(String nameSurname){
     for(int i = 0; i < myList.size(); i++){
        if(myList.get(i).getName().contains(nameSurname) || myList.get(i).getSurname().contains(nameSurname)){
            System.out.println(myList.get(i));
+           return myList.get(i);
        }
     }
+    return null;
 }
 public void countByCondition(StudentCondition studentCondition){
         int counter = 0;
@@ -177,7 +181,7 @@ public  void sortByPoints(){
 
             if(o1.getAmountOfPoints()>o2.getAmountOfPoints())
             {
-                return 1;
+                return o1.getAmountOfPoints();
             }
             else {
                 return 0;

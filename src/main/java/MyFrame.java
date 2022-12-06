@@ -4,6 +4,8 @@ import java.awt.*;
 public class MyFrame extends JFrame {
     public MyFrame() {
         super("Symulator szkoły");
+        //ClassTable classTable = new ClassTable();
+        //add(classTable);
         JPanel panel = new MyPanel();
         //JPanel inputPanel = new LoginPanel();
         add(panel);

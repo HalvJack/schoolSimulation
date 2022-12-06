@@ -23,11 +23,7 @@ public class Main {
             catch(Exception e){
                 e.printStackTrace();
             }*/
-            //ClassContainer ourSchool = new ClassContainer();
-            //new MyFrame();
-            //new ActionFrame(); to do innego programu
-            //new KeyTest();
-            //new Frame();
+            new MyFrame();
             ClassContainer ourSchool = new ClassContainer();
             ourSchool.addClass("klasa1", 5);
             ourSchool.addClass("klasa2", 0);
@@ -57,5 +53,4 @@ public class Main {
     }));
     }
 }
-//find empty
 

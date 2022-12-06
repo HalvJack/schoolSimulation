@@ -5,25 +5,29 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 public class MyPanel extends JPanel implements ActionListener {
     public static final int HEIGHT = 100;
     public static final int WIDTH = 300;
-    private JButton addClassButton;
-    private JButton addStudentButton;
-    private JButton addPointsButton;
-    private JButton getStudentButton;
-    private JButton changeConditionButton;
-    private JButton removePointsButton;
-    private JButton searchButton;
-    private JButton searchPartialButton;
-    private JButton countByConditionButton;
-    private JButton summaryButton;
-    private JButton sortByNameButton;
-    private JButton sortByPointsButton;
-    private JButton maxButton;
+    final private JButton addClassButton;
+    final private JButton addStudentButton;
+    final private JButton addPointsButton;
+    final private JButton getStudentButton;
+    final private JButton changeConditionButton;
+    final private JButton removePointsButton;
+    final private JButton searchButton;
+    final private JButton searchPartialButton;
+    final private JButton countByConditionButton;
+    final private JButton summaryButton;
+    final private JButton sortByNameButton;
+    final private JButton sortByPointsButton;
+    final private JButton maxButton;
+    final private JButton printTable;
     private JTextField className;
     private JTextField studentName;
     private JTextField studentSurname;
@@ -31,11 +35,12 @@ public class MyPanel extends JPanel implements ActionListener {
     private JTextField studentYearOfBirth;
     private JTextField studentAmountOfPoints;
     public ClassContainer ourSchool;
-    //public ClassTable studentTable;
+    public ClassTable studentTable; // cos z tabela
     public ClassContainer getOurSchool() {
         return ourSchool;
     }
-
+    public ArrayList<Class> classList = new ArrayList<Class>();
+    public Class mojaKlasa;
     public void setOurSchool(ClassContainer ourSchool) {
         this.ourSchool = ourSchool;
     }
@@ -57,9 +62,9 @@ public class MyPanel extends JPanel implements ActionListener {
         return studentAmountOfPoints.getText();
     }
     public MyPanel() {
+        mojaKlasa = new Class("klasa1", 0);
         addClassButton = new JButton("Add Class");
         addStudentButton = new JButton("Add Student");
-        //addStudentButton.setPreferredSize(new Dimension(80,30));
         addPointsButton = new JButton("Add Points");
         getStudentButton = new JButton("Get Student");
         changeConditionButton = new JButton("Change Condition");
@@ -71,6 +76,7 @@ public class MyPanel extends JPanel implements ActionListener {
         sortByNameButton = new JButton("Sort By Names");
         sortByPointsButton = new JButton("Sort By Points");
         maxButton = new JButton("Max");
+        printTable = new JButton("Print table");
         addClassButton.addActionListener(this);
         addStudentButton.addActionListener(this);
         addPointsButton.addActionListener(this);
@@ -84,8 +90,9 @@ public class MyPanel extends JPanel implements ActionListener {
         sortByNameButton.addActionListener(this);
         sortByPointsButton.addActionListener(this);
         maxButton.addActionListener(this);
+        printTable.addActionListener(this);
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout(13, 1));
+        buttonsPanel.setLayout(new GridLayout(14, 1));
         setPreferredSize(new Dimension(700, 500));
         buttonsPanel.add(addClassButton);
         buttonsPanel.add(addStudentButton);
@@ -100,14 +107,17 @@ public class MyPanel extends JPanel implements ActionListener {
         buttonsPanel.add(sortByNameButton);
         buttonsPanel.add(sortByPointsButton);
         buttonsPanel.add(maxButton);
+        buttonsPanel.add(printTable);
         this.add(buttonsPanel);
-        JPanel tablePanel = new JPanel();
+        /*JPanel tablePanel = new JPanel();
+        tablePanel.setLayout(new GridLayout(1,1));
         ClassTable studentTable = new ClassTable();
         tablePanel.add(studentTable);
-        this.add(tablePanel);
+        this.add(tablePanel);*/
         createComponents();
     }
     public void createComponents(){
+
         JLabel nameOfOurClass = new JLabel("Class name:");
         JLabel name = new JLabel("Student name: ");
         JLabel surname = new JLabel("Student surname:");
@@ -134,66 +144,92 @@ public class MyPanel extends JPanel implements ActionListener {
         inputPanel.add(studentYearOfBirth);
         inputPanel.add(amountOfPoints);
         inputPanel.add(studentAmountOfPoints);
-
         JPanel parentPanel = new JPanel();
         parentPanel.setLayout(new BorderLayout());
-        parentPanel.add(inputPanel, BorderLayout.CENTER);;
-
+        parentPanel.add(inputPanel, BorderLayout.CENTER);
         this.add(parentPanel);
     }
     @Override
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
-        Class aClass = new Class("klasa1", 0);
         if(source == addClassButton){
            // ourSchool.addClass(getClassName(),0);
-           // studentTable.firePropertyChange();
+            //String value = "lubie jablka";
+            //DefaultTableModel model = new DefaultTableModel(studentTable., studentTable.columnNames);
+            //model.setValueAt(value, 1, 1);
+            //studentTable.firePropertyChange();
+            Class aClass = new Class(className.getText(), 0);
+            classList.add(aClass);
+
         }
         else if(source == addStudentButton){
             Student student = new Student();
-            student.setName(getStudentName());
-            student.setSurname(getStudentSurname());
-            //student.setStudentCondition(StudentCondition.valueOf(getStudentCondition()));
-            student.setYearOfBirth(Integer.parseInt(getStudentYearOfBirth()));
-            student.setAmountOfPoints(Integer.parseInt(getStudentAmountOfPoints()));
+            student.setName(studentName.getText());
+            student.setSurname(studentSurname.getText());
+            student.setStudentCondition(StudentCondition.valueOf(getStudentCondition()));
+            student.setYearOfBirth(Integer.parseInt(studentYearOfBirth.getText()));
+            student.setAmountOfPoints(Integer.parseInt(studentAmountOfPoints.getText()));
             //ourSchool.getClass("klasa1");
-            //            aClass.addStudent(student);
-            aClass.summary();
-
+            classList.get(0).addStudent(student);
+            classList.get(0).summary();
         }
         else if(source == addPointsButton){
-           // Student student = new Student();
-            //student.setAmountOfPoints(Integer.parseInt(studentAmountOfPoints.getText()));
+            if(classList.get(0).search(studentSurname.getText()) != null){
+                classList.get(0).addPoints(classList.get(0).search(studentSurname.getText()),
+                        Integer.parseInt(studentAmountOfPoints.getText()));
+            }
         }
         else if(source == getStudentButton){
+            if(classList.get(0).search(studentSurname.getText()) != null) {
+                classList.get(0).getStudent(classList.get(0).search(studentSurname.getText()));
+            }
 
         }
         else if(source == changeConditionButton){
-
+            if(classList.get(0).search(studentSurname.getText()) != null) {
+                classList.get(0).changeCondition(classList.get(0).search(studentSurname.getText()),
+                        StudentCondition.valueOf(getStudentCondition()));
+            }
         }
         else if(source == removePointsButton){
-
+            if(classList.get(0).search(studentSurname.getText()) != null){
+                classList.get(0).addPoints(classList.get(0).search(studentSurname.getText()),
+                        Integer.parseInt(studentAmountOfPoints.getText()));
+            }
         }
         else if(source == searchButton){
-
+            classList.get(0).search(studentSurname.getText());
         }
         else if(source == searchPartialButton){
-
+            classList.get(0).searchPartial(studentSurname.getText());
         }
         else if(source == countByConditionButton){
-
+            classList.get(0).countByCondition(StudentCondition.valueOf(getStudentCondition()));
         }
         else if(source == summaryButton){
-
+            classList.get(0).summary();
         }
         else if(source == sortByNameButton){
-
+            classList.get(0).sortByName();
         }
         else if(source == sortByPointsButton){
-
+            classList.get(0).sortByPoints();
         }
         else if(source == maxButton){
-
+            //System.out.println(classList.get(0).max());
+            ((DefaultTableModel)studentTable.getModel()).removeRow(Integer.parseInt(studentAmountOfPoints.getText()));
+        }
+        else if(source == printTable)
+        {
+            Object[][] data = new Object[classList.get(0).getActualNumberOfStudents()][5];
+            for (int i = 0; i < classList.get(0).getActualNumberOfStudents(); i++) {
+                data[i][0] = classList.get(0).getMyList().get(i).getName();
+                data[i][1] = classList.get(0).getMyList().get(i).getSurname();
+                data[i][2] = classList.get(0).getMyList().get(i).getStudentCondition();
+                data[i][3] = classList.get(0).getMyList().get(i).getYearOfBirth();
+                data[i][4] = classList.get(0).getMyList().get(i).getAmountOfPoints();
+            }
+            studentTable = new ClassTable(data);
         }
     }
 }

@@ -5,12 +5,12 @@ public class Student implements Comparable<Student> {
     private String surname;
     private StudentCondition studentCondition;
     private int yearOfBirth;
-    private double amountOfPoints;
+    private int amountOfPoints;
 
     public Student() {
     }
 
-    public Student(String name, String surname, StudentCondition studentCondition, int yearOfBirth, double amountOfPoints) {
+    public Student(String name, String surname, StudentCondition studentCondition, int yearOfBirth, int amountOfPoints) {
         this.name = name;
         this.surname = surname;
         this.studentCondition = studentCondition;
@@ -77,11 +77,11 @@ public class Student implements Comparable<Student> {
         this.yearOfBirth = yearOfBirth;
     }
 
-    public double getAmountOfPoints() {
+    public int getAmountOfPoints() {
         return amountOfPoints;
     }
 
-    public void setAmountOfPoints(double amountOfPoints) {
+    public void setAmountOfPoints(int amountOfPoints) {
         this.amountOfPoints = amountOfPoints;
     }
 }
